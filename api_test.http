@@ -1,0 +1,84 @@
+@baseUrl = http://localhost:3000
+
+### 1. Register User A
+# @name registerUserA
+POST {{baseUrl}}/auth/signup
+Content-Type: application/json
+
+{
+    "email": "userA@example.com",
+    "password": "password123",
+    "name": "User A"
+}
+
+### 2. Register User B
+# @name registerUserB
+POST {{baseUrl}}/auth/signup
+Content-Type: application/json
+
+{
+    "email": "userB@example.com",
+    "password": "password123",
+    "name": "User B"
+}
+
+### 3. Login User A (Copy userId from response for next requests)
+# @name loginUserA
+POST {{baseUrl}}/auth/signin
+Content-Type: application/json
+
+{
+    "email": "userA@example.com",
+    "password": "password123"
+}
+
+### 4. Login User B (Copy userId from response for next requests)
+# @name loginUserB
+POST {{baseUrl}}/auth/signin
+Content-Type: application/json
+
+{
+    "email": "userB@example.com",
+    "password": "password123"
+}
+
+### Variables (Replace these with actual IDs from login/signup responses)
+@userA_Id = 692243a6a52e0c4dda50e808
+@userB_Id = 692243dba52e0c4dda50e80b
+
+### 5. Get Balance User A
+GET {{baseUrl}}/bank/balance/{{userA_Id}}
+
+### 6. Deposit to User A (Triggers 'HIGH_ROLLER' achievement if >= 1000)
+POST {{baseUrl}}/bank/deposit
+Content-Type: application/json
+
+{
+    "userId": "{{userA_Id}}",
+    "amount": 1000
+}
+
+### 7. Withdraw from User A
+POST {{baseUrl}}/bank/withdraw
+Content-Type: application/json
+
+{
+    "userId": "{{userA_Id}}",
+    "amount": 50
+}
+
+### 8. Transfer from User A to User B (Triggers 'FIRST_TRANSFER' achievement)
+POST {{baseUrl}}/bank/transfer
+Content-Type: application/json
+
+{
+    "fromUserId": "{{userA_Id}}",
+    "toUserId": "{{userB_Id}}",
+    "amount": 100
+}
+
+### 9. Get Statement User A
+GET {{baseUrl}}/bank/statement/{{userA_Id}}
+
+### 10. Get Gamification Profile User A (Check XP and Achievements)
+GET {{baseUrl}}/gamification/profile/{{userA_Id}}
