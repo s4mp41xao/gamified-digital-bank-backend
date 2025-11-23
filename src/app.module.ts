@@ -15,13 +15,9 @@ import { GamificationModule } from './gamification/gamification.module';
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => {
-        const uri = configService.get<string>('MONGO_URI');
-        console.log('Connecting to MongoDB with URI:', uri ? uri.replace(/:([^:@]+)@/, ':****@') : 'UNDEFINED');
-        return {
-          uri,
-        };
-      },
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGO_URI'),
+      }),
       inject: [ConfigService],
     }),
     EventEmitterModule.forRoot(),
