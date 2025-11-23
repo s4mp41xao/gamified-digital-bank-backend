@@ -1,6 +1,4 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { betterAuth } from 'better-auth';
-import { mongodbAdapter } from 'better-auth/adapters/mongodb';
 import { ConfigService } from '@nestjs/config';
 import { MongoClient } from 'mongodb';
 
@@ -14,6 +12,9 @@ export class AuthService implements OnModuleInit {
         const client = new MongoClient(this.configService.get<string>('MONGO_URI') || '');
         await client.connect();
         const db = client.db();
+
+        const { betterAuth } = await import('better-auth');
+        const { mongodbAdapter } = await import('better-auth/adapters/mongodb');
 
         this.auth = betterAuth({
             database: mongodbAdapter(db),
